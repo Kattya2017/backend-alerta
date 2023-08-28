@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const Area = require("./area");
-
+const sequelize = require('../database/database');
 
 class UnidadOrganica extends Model{}
 

@@ -41,7 +41,7 @@ module.exports = model('Usuario', UsuarioSchema);*/
 
 const { Model, DataTypes } = require("sequelize");
 const AlertaDerivada = require("./alerta-derivada");
-
+const sequelize = require('../database/database');
 
 class Usuario extends Model{}
 
