@@ -1,14 +1,127 @@
+const { request, response } = require("express");
+const { Area, UnidadOrganica } = require("../models");
 
 
-const getAreas = () => {}
+const getAreas = async (req = request, res = response) => {
+    try {
+        const {estado} = req.query;
+        const resp = await Area.findAll({
+            where:{
+                estado,
+            },
+            include:[
+                {
+                    model: UnidadOrganica,
+                }
+            ]
+        });
 
-const getArea = () => {}
+        res.json({
+            ok: true,
+            msg: 'Los datos se muestran con exito',
+            resp
+         });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+         });
+    }
+}
 
-const postArea = () => {}
 
-const putArea = () => {}
+const getArea = async (req = request, res = response) => {
+    try {
+        const {id} = req.params;
+        const resp = await Area.findOne({
+            where:{
+                id,
+            }
+        });
 
-const deleteArea = () => {}
+        res.json({
+            ok: true,
+            msg: 'Se muestran los datos del id',
+            resp
+         });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+         });
+    }
+}
+
+
+const postArea = async (req = request, res = response) => {
+    try {
+        const {nombre, ...data} = req.body;
+        data.nombre = nombre.toUpperCase();
+        const resp = await Area.create(data);
+
+        res.json({
+            ok: true,
+            msg: 'Se registro los datos con exito',
+            resp
+         });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+         });
+    }
+}
+
+
+const putArea = async (req = request, res = response) => {
+    try {
+        const {id} = req.params;
+        const {nombre, ...data} = req.body;
+        data.nombre = nombre.toUpperCase();
+        const resp = await Area.update(data,{
+            where:{
+                id,
+            }
+        });
+
+        res.json({
+            ok: true,
+            msg: 'Los datos se actualizaron con exito',
+            resp
+         });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+         });
+    }
+}
+
+
+const deleteArea = async (req = request, res = response) => {
+    try {
+        const {id} = req.params;
+        const {estado} = req.query;
+        const data = {estado};
+        const resp = await Area.update(data,{
+            where:{
+                id,
+            }
+        });
+
+        res.json({
+            ok: true,
+            msg: (estado === '1')?"Se habilito el area con exito":"Se deshabilito el area con exito",
+            resp
+         });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+         });
+    }
+}
+
 
 module.exports = {
     getAreas,

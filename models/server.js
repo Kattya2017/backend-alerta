@@ -24,7 +24,7 @@ class Server{
             estado: '/api/estado',
             organo: '/api/organo',
             rol: '/api/rol',
-            sede: 'api/sede',
+            sede: '/api/sede',
             tipoalerta: '/api/tipoalerta',
             unidadorganica: '/api/unidadorganica',
             usuario: '/api/usuario',

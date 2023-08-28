@@ -1,9 +1,16 @@
 const { request, response } = require("express");
-const Sede = require("../models/sede");
+const { Sede } = require("../models");
 
 
 const getSedes = async(req = request, res = response) => {
     try {
+        const { estado } = req.query;
+        const resp = await Sede.findAll({
+            where:{
+                estado,
+            },
+        });
+
         res.json({
             ok:true,
             msg:'Se muestran los datos con exito',
@@ -20,6 +27,13 @@ const getSedes = async(req = request, res = response) => {
 
 const getSede = async (req = request, res = response) => {
     try {
+        const {id} = req.params;
+        const resp = await Sede.findOne({
+            where:{
+                id,
+            }
+        });
+
         res.json({
             ok:true,
             msg:'Se muestran los datos del id correctamente',
@@ -56,9 +70,18 @@ const postSede = async (req = request, res = response) => {
 
 const putSede = async (req = request, res = response) => {
     try {
+        const {id} = req.params;
+        const {nombre, ...data} = req.body;
+        data.nombre = nombre.toUpperCase();
+        const resp = await Sede.update(data,{
+            where:{
+                id,
+            }
+        });
+
         res.json({
             ok: true,
-            msg: 'Los dato se atualizaron con exito',
+            msg: 'Los datos se atualizaron con exito',
             resp
         });
     } catch (error) {
@@ -72,6 +95,15 @@ const putSede = async (req = request, res = response) => {
 
 const deleteSede = async (req = request, res = response) => {
     try {
+        const {id} = req.params;
+        const {estado} = req.query;
+        const data = {estado}
+        const resp = await Sede.update(data,{
+            where:{
+                id,
+            }
+        });
+
         res.json({
             ok: true,
             msg: (estado === '1')?"Se habilito la sede con exito":"Se deshabilito la sede con exito",
