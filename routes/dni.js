@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { getDnis, getDni, postDni, putDni, deleteDni } = require("../controllers/dni");
+const { validarCampos } = require("../middlewares");
 
 
 const router = Router();
