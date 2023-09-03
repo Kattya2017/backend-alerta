@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const Administrado = require("../models/administrado");
-
+const bcrypt = require('bcryptjs');
 
 const getAdministrados = async (req = request, res = response) => {
     try {
@@ -45,16 +45,29 @@ const getAdministrado = async (req = request, res = response) => {
 
 const postAdministrado = async (req = request, res = response) => {
     try {
-        const {nombre, apellido, password, ...data} = req.body;
+        const {nombre, apellido, password, dni, ...data} = req.body;
+        const resp = await Administrado.findOne({
+            where:{
+                dni
+            }
+        });
+        if (resp) {
+            return res.json({
+                ok:false,
+                msg:'Usted ya tiene una cuenta creada!'
+            })
+        }
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
         data.nombre = nombre.toUpperCase();
         data.apellido = apellido.toUpperCase();
-        data.password = password;
-        const resp = await Administrado.create(data);
-
+        data.password=hash;
+        data.dni=dni;
+        const administrado = await Administrado.create(data);
         res.json({
             ok: true,
             msg: 'Datos registrados correctamente',
-            resp
+            resp:administrado
         });
     } catch (error) {
         res.status(400).json({
@@ -68,10 +81,15 @@ const postAdministrado = async (req = request, res = response) => {
 const putAdministrado = async (req = request, res = response) => {
     try {
         const {id} = req.params;
-        const {nombre, apellido, password, ...data} = req.body;
+        const {nombre, apellido,password, ...data} = req.body;
+
+        if (password) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(password, salt);
+            data.password=hash;
+        }
         data.nombre = nombre.toUpperCase();
         data.apellido = apellido.toUpperCase();
-        data.password = password;
         const resp = await Administrado.update(data,{
             where:{
                 id, 

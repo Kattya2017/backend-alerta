@@ -8,7 +8,9 @@ const router = Router ();
 
 router.get('',getAdministrados);
 router.get('/:id', getAdministrado);
-router.post('',[check('id_dni'), validarCampos], postAdministrado);
+router.post('',[ 
+    validarCampos
+], postAdministrado);
 router.put('/:id', putAdministrado);
 router.delete('/:id', deleteAdministrado);
 

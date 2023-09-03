@@ -1,57 +1,64 @@
 const { request, response } = require("express");
-const Usuario = require("../models/usuario");
-const bcryptjs = require("bcryptjs");
-const generarToken = require("../helpers/generar-jwt");
+const bcrypt = require('bcryptjs');
+const { Administrado } = require("../models");
+const { generarJWT } = require("../helpers");
 
-const postLogin = async (req = request, res = response) => {
-    const { coleccion } = req.params;
-    let password;
-    let usuario;
-    let validarPassword;
-    let token;
-    switch (coleccion) {
-      case "usuario":
-        usuario = req.body.usuario;
-        password = req.body.password;
-        const user = await Usuario.findOne({ usuario });
-        if (!user) {
-          return res.json({
-            ok: false,
-            msg: "Usuario no existe, converse con el administrador",
-            user: null,
-            token: null,
-          });
-        }
-        if (!user.estado) {
-          return res.json({
-            ok: false,
-            msg: "Usuario bloqueado, converse con el administrador",
-            user: null,
-            token: null,
-          });
-        }
-        validarPassword = bcryptjs.compareSync(password, user.password);
-        if (!validarPassword) {
-          return res.json({
-            ok: false,
-            msg: "Contraseña no valida",
-            user: null,
-            token: null,
-          });
-        }
-        token= await generarToken.generarJWT(user._id);
-        res.json({
-          ok: true,
-          msg: "Login correcto",
-          user,
-          token
-        });
-        break;
-      default:
-        break;
+const postLoginAdministrado = async (req = request, res = response) => {
+  try {
+    const {dni,password} = req.body;
+    const resp = await Administrado.findOne({
+      where:{
+        dni
+      }
+    });
+    if (!resp) {
+      return res.status(400).json({
+        ok:false,
+        msg:'Usted no tiene una cuenta creada, porfavor registrese'
+      })
     }
-  };
+    const boleano = bcrypt.compareSync(password,resp.password);
+    if (!boleano) {
+      return res.status(400).json({
+        ok:false,
+        msg:'La contraseña es incorrecta!!'
+      })
+    }
+    const token = await generarJWT(resp.id);
+    res.json({
+      ok:true,
+      msg:'Se inicio sesion con exito',
+      user:resp,
+      token
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error:${error}`
+    })
+  }
+};
+
+const getLoginAdministrado = async (req = request, res = response) => {
+  try { 
+    const administrado = req.administradoToken;
+    const token = await generarJWT(administrado.id);
+    res.json({
+      ok:true,
+      msg:'Se genero nuevo token',
+      user:administrado,
+      token
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok:false,
+      msg:`Error:${error}`
+    })
+  }
+};
+
 
   module.exports = {
-      postLogin
+    postLoginAdministrado,
+    getLoginAdministrado
   }

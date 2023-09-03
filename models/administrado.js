@@ -15,8 +15,8 @@ Administrado.init({
     password:{
         type:DataTypes.STRING
     },
-    id_dni:{
-        type:DataTypes.INTEGER
+    dni:{
+        type:DataTypes.CHAR
     }
 },{
     sequelize,

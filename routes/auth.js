@@ -1,11 +1,14 @@
 const { Router, request, response } = require("express");
-const { postLogin } = require("../controllers/auth");
-const {validarCampos} = require('../middlewares')
+const { postLoginAdministrado, getLoginAdministrado } = require("../controllers/auth");
+const {validarCampos, validarJWT, validarJWTAdministrado} = require('../middlewares')
 const router = Router();
 
-router.post('/:coleccion',[
+router.post('/administrado',[
     validarCampos
-], postLogin);
-
+], postLoginAdministrado);
+router.get('/administrado',[
+    validarJWTAdministrado,
+    validarCampos
+], getLoginAdministrado);
 
 module.exports = router;
