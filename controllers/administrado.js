@@ -1,6 +1,7 @@
 const { request, response } = require("express");
 const Administrado = require("../models/administrado");
 const bcrypt = require('bcryptjs');
+const { generarJWT } = require("../helpers");
 
 const getAdministrados = async (req = request, res = response) => {
     try {
@@ -64,10 +65,12 @@ const postAdministrado = async (req = request, res = response) => {
         data.password=hash;
         data.dni=dni;
         const administrado = await Administrado.create(data);
+        const token = await generarJWT(administrado.id)
         res.json({
             ok: true,
             msg: 'Datos registrados correctamente',
-            resp:administrado
+            user:administrado,
+            token
         });
     } catch (error) {
         res.status(400).json({

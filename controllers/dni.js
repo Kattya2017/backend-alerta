@@ -19,6 +19,32 @@ const getDnis = async (req = request, res = response) => {
     }
 }
 
+const validarDni=async(req=request,res=response)=>{
+    try {
+        const {dni} = req.params;
+        const resp = await Dni.findOne({
+           where:{
+            dni
+           }
+        });
+        if (!resp) {
+            return res.json({
+                ok:false,
+                msg:'Su DNI no esta vinculado a la CSJUC'
+            });
+        }
+        res.json({
+            ok:true,
+            msg:'Bienvenido',
+            resp
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`
+        })
+    }
+}
 
 const getDni = async (req = request, res = response) => {
     try {
@@ -106,5 +132,6 @@ module.exports = {
     getDni,
     postDni,
     putDni,
-    deleteDni
+    deleteDni,
+    validarDni
 }

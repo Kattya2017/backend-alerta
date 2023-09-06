@@ -7,6 +7,12 @@ class Dni extends Model{};
 Dni.init({
     dni:{
         type:DataTypes.CHAR
+    },
+    apellido:{
+        type:DataTypes.STRING
+    },
+    nombre:{
+        type:DataTypes.STRING
     }
 },{
     sequelize,
