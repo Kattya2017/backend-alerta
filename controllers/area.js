@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { Area, UnidadOrganica } = require("../models");
+const { Area, UnidadOrganica, Organo, Sede } = require("../models");
 
 
 const getAreas = async (req = request, res = response) => {
@@ -9,11 +9,12 @@ const getAreas = async (req = request, res = response) => {
             where:{
                 estado,
             },
-            include:[
+            attributes:['id','nombre','estado']
+            /* include:[
                 {
                     model: UnidadOrganica,
                 }
-            ]
+            ] */
         });
 
         res.json({
@@ -36,7 +37,22 @@ const getArea = async (req = request, res = response) => {
         const resp = await Area.findOne({
             where:{
                 id,
-            }
+            },
+            include:[
+                {
+                    model: UnidadOrganica,
+                    include:[
+                        {
+                            model:Organo,
+                            include:[
+                                {
+                                    model:Sede
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         });
 
         res.json({

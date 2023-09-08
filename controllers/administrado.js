@@ -19,6 +19,27 @@ const getAdministrados = async (req = request, res = response) => {
         });
     }
 }
+const getSedeAdministrado = async (req = request, res = response) => {
+    try {
+        const administrado = req.administradoToken;
+        const resp = await Administrado.findOne({
+            where:{
+                id:administrado.id
+            }
+        });
+
+        res.json({
+            ok:true,
+            msg:'Se muestran los datos con exito',
+            resp
+        });
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`,
+        });
+    }
+}
 
 
 const getAdministrado = async (req = request, res = response) => {
@@ -111,6 +132,29 @@ const putAdministrado = async (req = request, res = response) => {
         });
     }
 }
+const putAdministradoJurisdiccion = async (req = request, res = response) => {
+    try {
+        const administrado = req.administradoToken;
+        const data = req.body;
+
+        const resp = await Administrado.update(data,{
+            where:{
+                id:administrado.id
+            }
+        });
+        
+        res.json({
+            ok: true,
+            msg: 'Los datos se atualizaron con exito',
+            resp
+        });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+        });
+    }
+}
 
 
 const deleteAdministrado = async (req = request, res = response) => {
@@ -138,7 +182,9 @@ const deleteAdministrado = async (req = request, res = response) => {
 module.exports = {
     getAdministrados,
     getAdministrado,
+    getSedeAdministrado,
     postAdministrado,
     putAdministrado,
+    putAdministradoJurisdiccion,
     deleteAdministrado
 }

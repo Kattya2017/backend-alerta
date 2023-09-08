@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { UnidadOrganica, Organo } = require("../models");
+const { UnidadOrganica, Organo, Sede } = require("../models");
 
 
 const getUnidadesOrganicas = async (req = request, res = response) => {
@@ -9,9 +9,10 @@ const getUnidadesOrganicas = async (req = request, res = response) => {
             where:{
                 estado,
             },
-            include:[{
+            attributes:['id','nombre','estado']
+            /* include:[{
                 model: Organo,
-            }],
+            }], */
         });
 
         res.json({
@@ -34,7 +35,17 @@ const getUnidadOrganica = async (req = request, res = response) => {
         const resp = await UnidadOrganica.findOne({
             where:{
                 id,
-            }
+            },
+            include:[
+                {   
+                    model:Organo,
+                    include:[
+                        {
+                            model:Sede
+                        }
+                    ]
+                }
+            ]
         });
 
         res.json({

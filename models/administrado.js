@@ -17,6 +17,12 @@ Administrado.init({
     },
     dni:{
         type:DataTypes.CHAR
+    },
+    tipo_area:{
+        type:DataTypes.TINYINT,
+    },
+    area:{
+        type:DataTypes.INTEGER
     }
 },{
     sequelize,

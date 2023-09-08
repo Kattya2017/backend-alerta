@@ -9,11 +9,13 @@ const getOrganos = async (req = request, res = response) => {
          where:{
             estado,
          },
+         attributes:['id','nombre','estado']
+         /* 
          include:[
             {
                model: Sede,
             },
-         ],
+         ], */
       });
 
       res.json({
@@ -35,7 +37,12 @@ const getOrgano = async (req = request, res = response) => {
       const resp = await Organo.findOne({
          where:{
             id,
-         }
+         },
+         include:[
+            {
+               model: Sede,
+            },
+         ],
       });
 
       res.json({
