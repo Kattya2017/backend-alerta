@@ -1,11 +1,42 @@
 const { request, response } = require("express");
 const Alerta = require("../models/alerta");
 const { Administrado, TipoAlerta } = require("../models");
+const { funDate } = require("../helpers");
+const { Op } = require("sequelize");
 
 
 const getAlertas = async (req = request, res = response) => {
    try {
       const resp = await Alerta.findAll({
+         include:[{
+            model:Administrado
+         },{
+         model:TipoAlerta
+         },]
+      });
+
+      res.json({
+         ok:true,
+         msg:'Se muestran los datos con exito',
+         resp
+     });
+   } catch (error) {
+      res.status(400).json({
+         ok:false,
+         msg:`Error:${error}`,
+     });
+   }
+}
+const getAlertaAdministrado = async (req = request, res = response) => {
+   try {
+      const administrado = req.administradoToken;
+      const resp = await Alerta.findAll({
+         where:{
+            id_administrado:administrado.id,
+            conformidad:{
+               [Op.is]:null
+            }
+         },
          include:[{
             model:Administrado,
          },{
@@ -25,7 +56,6 @@ const getAlertas = async (req = request, res = response) => {
      });
    }
 }
-
 
 const getAlerta = async (req = request, res = response) => {
    try {
@@ -51,15 +81,17 @@ const getAlerta = async (req = request, res = response) => {
 
 const postAlerta = async (req = request, res = response)=> {
    try {
-      const {fecha, hora, conformidad, ...data} = req.body;
-      data.fecha = fecha;
-      data.hora = hora;
-      data.conformidad = conformidad;
+      const administrado = req.administradoToken;
+      const data = req.body;
+      const {fecha,hora} = funDate();
+      data.hora=hora;
+      data.fecha=fecha;
+      data.id_administrado=administrado.id;
       const resp = await Alerta.create(data);
       
       res.json({
          ok: true,
-         msg: 'Datos registrados correctamente',
+         msg: 'La alerta informatica ha sido enviado con exito, en breve atenderan su problema',
          resp
      });
    } catch (error) {
@@ -115,6 +147,7 @@ const deleteAlerta = async (req = request, res = response) => {
 module.exports = {
    getAlertas,
    getAlerta,
+   getAlertaAdministrado,
    postAlerta,
    putAlerta,
    deleteAlerta

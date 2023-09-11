@@ -14,13 +14,15 @@ Alerta.init({
     },
     conformidad:{
         type:DataTypes.TINYINT,
-        defaultValue: 0,
     },
     id_administrado:{
         type:DataTypes.INTEGER
     },
     id_tipo_alerta:{
         type:DataTypes.INTEGER
+    },
+    descripcion:{
+        type:DataTypes.TEXT
     }
 },{
     sequelize,
