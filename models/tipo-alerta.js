@@ -9,6 +9,9 @@ TipoAlerta.init({
     descripcion:{
         type:DataTypes.STRING
     },
+    imagen:{
+        type:DataTypes.STRING
+    },
     estado:{
         type:DataTypes.TINYINT,
         defaultValue:1

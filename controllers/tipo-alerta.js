@@ -1,5 +1,6 @@
 const { request, response } = require("express");
 const { TipoAlerta } = require("../models");
+const { subirArchivo } = require("../helpers");
 
 
 const getTipoAlertas = async (req = request, res = response) => {
@@ -47,12 +48,17 @@ const getTipoAlerta = async (req = request, res = response) => {
 }
 
 
+
 const postTipoAlerta = async (req = request, res = response) => {
     try {
-        const {descripcion,...data} = req.body;
-        data.descripcion = descripcion.toUpperCase();
-        const resp = await TipoAlerta.create(data);
+        const {descripcion, imagen, ...data} = req.body;
+        const files = req.files;
+        const archivosubido = await subirArchivo(files, ['png', 'jpg'], 'imagen')
 
+        data.descripcion = descripcion.toUpperCase();
+        data.imagen = archivosubido;
+
+        const resp = await TipoAlerta.create(data);
         res.json({
             ok: true,
             msg: 'Datos registrados correctamente',
@@ -70,8 +76,9 @@ const postTipoAlerta = async (req = request, res = response) => {
 const putTipoAlerta = async (req = request, res = response) => {
     try {
         const {id} = req.params;
-        const {descripcion, ...data} = req.body;
+        const {descripcion, imagen, ...data} = req.body;
         data.descripcion = descripcion.toUpperCase();
+        data.imagen = imagen;
         const resp = await TipoAlerta.update(data,{
             where:{
                 id,
@@ -122,5 +129,6 @@ module.exports = {
     getTipoAlerta,
     postTipoAlerta,
     putTipoAlerta,
-    deleteTipoAlerta
+    deleteTipoAlerta,
+    mostrarImagenTipoalerta
 }
