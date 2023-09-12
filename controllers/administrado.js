@@ -132,6 +132,36 @@ const putAdministrado = async (req = request, res = response) => {
         });
     }
 }
+
+const putAdministradoPassword = async (req = request, res = response) => {
+    try {
+        const admin = req.administradoToken;
+        const {password, ...data} = req.body;
+
+        if (password) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(password, salt);
+            data.password=hash;
+        }
+        const resp = await Administrado.update(data,{
+            where:{
+                id:admin.id 
+            }
+        });
+        
+        res.json({
+            ok: true,
+            msg: 'Los datos se atualizaron con exito',
+            resp
+        });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error: ${error}`
+        });
+    }
+}
+
 const putAdministradoJurisdiccion = async (req = request, res = response) => {
     try {
         const administrado = req.administradoToken;
@@ -186,5 +216,6 @@ module.exports = {
     postAdministrado,
     putAdministrado,
     putAdministradoJurisdiccion,
+    putAdministradoPassword,
     deleteAdministrado
 }

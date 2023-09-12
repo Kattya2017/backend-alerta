@@ -105,13 +105,10 @@ const postAlerta = async (req = request, res = response)=> {
 const putAlerta = async (req = request, res = response) => {
    try {
       const {id} = req.params;
-      const {fecha, hora, conformidad, ...data} = req.body;
-      data.fecha = fecha;
-      data.hora = hora;
-      data.conformidad = conformidad;
+      const data = req.body;
       const resp = await Alerta.update(data,{
          where:{
-            id,
+            id
          }
       })
 
