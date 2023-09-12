@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { getTipoAlertas, getTipoAlerta, postTipoAlerta, putTipoAlerta, deleteTipoAlerta } = require("../controllers/tipo-alerta");
-const { validarArchivoSubir } = require("../middlewares");
+const { validarArchivoSubir, validarCampos } = require("../middlewares");
 
 
 const router = Router();

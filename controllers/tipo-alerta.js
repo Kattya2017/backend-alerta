@@ -47,6 +47,27 @@ const getTipoAlerta = async (req = request, res = response) => {
     }
 }
 
+const getImagenTipoalerta = async (req = request, res = response) =>{
+    try {
+        const { archivosubido } = req.params;
+        const resp = await TipoAlerta.findOne({
+            where:{
+                imagen:archivosubido
+            }
+        });
+        if (resp.imagen) {
+            const pathImagen = path.join(
+                "../uploads", "imagen", resp.imagen
+            );
+        }
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`,
+        });
+    }
+}
+
 
 
 const postTipoAlerta = async (req = request, res = response) => {
@@ -62,7 +83,7 @@ const postTipoAlerta = async (req = request, res = response) => {
         res.json({
             ok: true,
             msg: 'Datos registrados correctamente',
-            resp
+            resp,
         });
     } catch (error) {
         res.status(400).json({
@@ -76,9 +97,8 @@ const postTipoAlerta = async (req = request, res = response) => {
 const putTipoAlerta = async (req = request, res = response) => {
     try {
         const {id} = req.params;
-        const {descripcion, imagen, ...data} = req.body;
+        const {descripcion, ...data} = req.body;
         data.descripcion = descripcion.toUpperCase();
-        data.imagen = imagen;
         const resp = await TipoAlerta.update(data,{
             where:{
                 id,
@@ -130,5 +150,5 @@ module.exports = {
     postTipoAlerta,
     putTipoAlerta,
     deleteTipoAlerta,
-    mostrarImagenTipoalerta
+    getImagenTipoalerta
 }
