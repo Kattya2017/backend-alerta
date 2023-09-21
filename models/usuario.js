@@ -11,8 +11,14 @@ Usuario.init({
     apellido:{
         type:DataTypes.STRING
     },
+    usuario:{
+        type:DataTypes.STRING
+    },
     password:{
         type:DataTypes.STRING
+    },
+    id_rol:{
+        type:DataTypes.INTEGER
     },
     estado:{
         type:DataTypes.TINYINT,

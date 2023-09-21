@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const { Usuario } = require("../models");
-
+const bcrypt = require('bcryptjs');
 const getUsuarios = async(req = request, res = response) => {
     try {
         const {estado} = req.query;
@@ -47,16 +47,31 @@ const getUsuario = async(req = request, res = response) => {
 
 const postUsuario = async(req = request, res = response) => {
     try {
-        const {nombre, apellido, password, ...data} = req.body;
+        const {nombre, apellido,usuario, password, ...data} = req.body;
+        
+        const resp = await Usuario.findOne({
+            where:{
+                usuario
+            }
+        });
+        if (resp) {
+            return res.json({
+                ok:false,
+                msg:'Usted ya tiene una cuenta creada!'
+            })
+        }
+        //const resp = await Usuario.create(data);
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
         data.nombre = nombre.toUpperCase();
         data.apellido = apellido.toUpperCase();
-        data.password = password;
-        const resp = await Usuario.create(data);
-
+        data.password=hash;
+        data.usuario=usuario;
+        const user = await Usuario.create(data);
         res.json({
             ok: true,
             msg: 'Datos registrados correctamente',
-            resp
+            usuario:user
         });
     } catch (error) {
         res.status(400).json({
@@ -70,9 +85,14 @@ const putUsuario = async(req = request, res = response) => {
     try {
         const {id} = req.params;
         const {nombre, apellido, password, ...data} = req.body;
+        if (password) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(password, salt);
+            data.password=hash;
+        }
         data.nombre = nombre.toUpperCase();
         data.apellido = apellido.toUpperCase();
-        data.password = password;
+        
         const resp = await Usuario.update(data,{
             where:{
                 id,

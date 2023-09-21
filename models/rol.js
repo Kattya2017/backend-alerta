@@ -1,6 +1,7 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database/database');
+const Usuario = require('./usuario');
 
 
 
@@ -18,6 +19,18 @@ Rol.init({
     sequelize,
     tableName: 'rol',
     timestamps: false
+});
+
+
+
+Rol.hasMany(Usuario,{
+    as:'FK_RolUsuario',
+    foreignKey:'id_rol'
+});
+
+Usuario.belongsTo(Rol,{
+    sourcekey:'id',
+    foreignKey:'id_rol'
 });
 
 

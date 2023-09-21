@@ -1,6 +1,6 @@
 const { Router, request, response } = require("express");
-const { postLoginAdministrado, getLoginAdministrado } = require("../controllers/auth");
-const {validarCampos, validarJWT, validarJWTAdministrado} = require('../middlewares')
+const { postLoginAdministrado, getLoginAdministrado, postLoginUsuario, getLoginUsuario } = require("../controllers/auth");
+const {validarCampos, validarJWTAdministrado, validarJWTUsuario} = require('../middlewares')
 const router = Router();
 
 router.post('/administrado',[
@@ -10,5 +10,15 @@ router.get('/administrado',[
     validarJWTAdministrado,
     validarCampos
 ], getLoginAdministrado);
+
+
+router.post('/usuario',[
+    validarCampos
+], postLoginUsuario);
+
+router.get('/usuario',[
+    validarJWTUsuario,
+    validarCampos
+], getLoginUsuario);
 
 module.exports = router;

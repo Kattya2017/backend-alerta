@@ -67,11 +67,45 @@ const validarJWTAdministrado =async (req= request, res = response, next)=>{
         res.status(401).json({
             msg: 'Token no valido'
         })
+    }    
+}
+const validarJWTUsuario =async (req= request, res = response, next)=>{ 
+    const token = req.header('token');
+    if (!token) {
+        return res.status(401).json({
+            msg: 'No hay token en la peticion'
+        })
     }
-    
-    
+
+    try {
+        const {id} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        // leer el usuario
+        const usuario = await Usuario.findOne({
+            where:{
+                id
+            }
+        });
+        if (!usuario) {
+            return res.status(401).json({
+                msg: 'Token no valido - usuario no existe en BD'
+            })
+        }
+        if (!usuario.estado) {
+            return res.status(401).json({
+                msg: 'Token no valido - usuario inactivo'
+            })
+        }
+        req.usuarioToken = usuario;
+        next();
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({
+            msg: 'Token no valido'
+        })
+    }    
 }
 module.exports = {
     validarJWT,
-    validarJWTAdministrado
+    validarJWTAdministrado,
+    validarJWTUsuario
 }
