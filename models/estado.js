@@ -24,7 +24,7 @@ Estado.hasMany(AlertaDerivada,{
 
 AlertaDerivada.belongsTo(Estado,{
     sourcekey:'id',
-    foreignKey:'FK_ADerivadaEstado'
+    foreignKey:'id_estado'
 });
 
 

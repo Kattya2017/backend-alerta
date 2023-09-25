@@ -27,6 +27,32 @@ const getAlertas = async (req = request, res = response) => {
      });
    }
 }
+const getAlertasHoy = async (req = request, res = response) => {
+   try {
+      const {fecha} = funDate();
+      const resp = await Alerta.findAll({
+         where:{
+            fecha
+         },
+         include:[{
+            model:Administrado
+         },{
+         model:TipoAlerta
+         },]
+      });
+
+      res.json({
+         ok:true,
+         msg:'Se muestran los datos con exito',
+         resp
+     });
+   } catch (error) {
+      res.status(400).json({
+         ok:false,
+         msg:`Error:${error}`,
+     });
+   }
+}
 const getAlertaAdministrado = async (req = request, res = response) => {
    try {
       const administrado = req.administradoToken;
@@ -143,6 +169,7 @@ const deleteAlerta = async (req = request, res = response) => {
 
 module.exports = {
    getAlertas,
+   getAlertasHoy,
    getAlerta,
    getAlertaAdministrado,
    postAlerta,

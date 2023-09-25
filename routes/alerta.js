@@ -1,11 +1,12 @@
 const { Router } = require("express");
-const { getAlertas, getAlerta, postAlerta, putAlerta, deleteAlerta, getAlertaAdministrado } = require("../controllers/alerta");
+const { getAlertas, getAlerta, postAlerta, putAlerta, deleteAlerta, getAlertaAdministrado, getAlertasHoy } = require("../controllers/alerta");
 const { validarCampos, validarJWTAdministrado } = require("../middlewares");
 
 
 const router = Router ();
 
 router.get('', getAlertas);
+router.get('/ultimas/24', getAlertasHoy);
 router.get('/mostrar/administrado',[
     validarJWTAdministrado,
     validarCampos

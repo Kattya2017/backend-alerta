@@ -20,10 +20,6 @@ AlertaDerivada.init({
     hora_fin:{
         type:DataTypes.CHAR
     },
-    estado:{
-        type:DataTypes.TINYINT,
-        defaultValue: 1
-    },
     id_alerta:{
         type:DataTypes.INTEGER
     },
