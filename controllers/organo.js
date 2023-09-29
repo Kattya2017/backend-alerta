@@ -9,7 +9,11 @@ const getOrganos = async (req = request, res = response) => {
          where:{
             estado,
          },
-         attributes:['id','nombre','estado']
+         include:[
+            {
+               model:Sede
+            }
+         ]
          /* 
          include:[
             {
