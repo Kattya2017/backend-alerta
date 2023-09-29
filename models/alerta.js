@@ -23,6 +23,10 @@ Alerta.init({
     },
     descripcion:{
         type:DataTypes.TEXT
+    },
+    estado:{
+        type:DataTypes.TINYINT,
+        defaultValue:0
     }
 },{
     sequelize,
