@@ -23,6 +23,25 @@ const getUsuarios = async(req = request, res = response) => {
     }
 }
 
+const getUsuarioInformatico=async(req=request,res=response)=>{
+    try {
+        const resp = await Usuario.findAll({
+            where:{
+                id_rol:3
+            }
+        });
+        res.json({
+            ok:true,
+            msg:'Se muestran los datos con exito',
+            resp
+        });
+    } catch (error) {
+        res.status(400).json({
+            ok:false,
+            msg:`Error:${error}`,
+        });
+    }
+}
 
 const getUsuario = async(req = request, res = response) => {
     try {
@@ -138,6 +157,7 @@ const deleteUsuario = async(req = request, res = response) => {
 
 module.exports = {
     getUsuarios,
+    getUsuarioInformatico,
     getUsuario,
     postUsuario,
     putUsuario,
