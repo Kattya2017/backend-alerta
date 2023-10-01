@@ -9,10 +9,9 @@ const getUnidadesOrganicas = async (req = request, res = response) => {
             where:{
                 estado,
             },
-            attributes:['id','nombre','estado']
-            /* include:[{
+            include:[{
                 model: Organo,
-            }], */
+            }],
         });
 
         res.json({
