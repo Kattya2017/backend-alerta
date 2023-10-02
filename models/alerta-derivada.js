@@ -28,6 +28,18 @@ AlertaDerivada.init({
     },
     id_estado:{
         type:DataTypes.INTEGER
+    },
+    sede:{
+        type:DataTypes.STRING
+    },
+    organo:{
+        type:DataTypes.STRING
+    },
+    unidad:{
+        type:DataTypes.STRING
+    },
+    area:{
+        type:DataTypes.STRING
     }
 },{
     sequelize,

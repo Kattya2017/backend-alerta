@@ -6,6 +6,8 @@ const http = require('http');
 const socketIO = require('socket.io');
 const sequelize = require('../database/database');
 const { conectarCliente } = require('../sockets/usuario-socket');
+const { alertaSocket } = require('../sockets/alertas-socket');
+const { alertaDerivadaSocket } = require('../sockets/alerta-derivada-socket');
 class Server{
     static _intance=Server;
     io=socketIO.Server;
@@ -63,6 +65,8 @@ class Server{
         this.io.on('connection', (cliente)=>{
             console.log('Cliente conectado');
             conectarCliente(cliente, this.io);
+            alertaSocket(cliente,this.io);
+            alertaDerivadaSocket(cliente,this.io);
         });
     }
     middlewares(){
