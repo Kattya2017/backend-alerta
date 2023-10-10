@@ -19,10 +19,16 @@ Administrado.init({
         type:DataTypes.CHAR
     },
     tipo_area:{
-        type:DataTypes.TINYINT,
+        type:DataTypes.TINYINT
     },
     area:{
         type:DataTypes.INTEGER
+    },
+    telefono:{
+        type:DataTypes.CHAR
+    },
+    anexo:{
+        type:DataTypes.CHAR
     }
 },{
     sequelize,
