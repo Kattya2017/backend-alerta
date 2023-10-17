@@ -16,7 +16,7 @@ class Server{
         this.port = process.env.PORT;
         this.paths = {
             //usuario: '/api/usuario',
-            //uploads: '/api/uploads'
+            uploads: '/api/uploads',
             auth: '/api/auth',
             administrado: '/api/administrado',
             alertaderivada: '/api/alertaderivada',
@@ -100,6 +100,7 @@ class Server{
         this.app.use(this.paths.tipoalerta, require('../routes/tipo-alerta'));
         this.app.use(this.paths.unidadorganica, require('../routes/unidad-organica'));
         this.app.use(this.paths.usuario, require('../routes/usuario'));
+        this.app.use(this.paths.uploads, require('../routes/uploads'));
         
     }
     listen(){

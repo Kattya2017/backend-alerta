@@ -9,7 +9,7 @@ const getAreas = async (req = request, res = response) => {
             where:{
                 estado,
             },
-            attributes:['id','nombre','estado']
+            attributes:['id','nombre','estado','anexo']
             /* include:[
                 {
                     model: UnidadOrganica,

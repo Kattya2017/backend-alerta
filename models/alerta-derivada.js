@@ -40,6 +40,9 @@ AlertaDerivada.init({
     },
     area:{
         type:DataTypes.STRING
+    },
+    anexo:{
+        type:DataTypes.STRING
     }
 },{
     sequelize,

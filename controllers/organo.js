@@ -9,6 +9,7 @@ const getOrganos = async (req = request, res = response) => {
          where:{
             estado,
          },
+         
          /* 
          include:[
             {

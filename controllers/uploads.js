@@ -4,7 +4,93 @@ const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 const { subirArchivo } = require("../helpers");
-const { Usuario } = require("../models");
+const { Usuario, TipoAlerta } = require("../models");
+
+const mostrarImagenAlerta = async (req = request, res = response)  => {
+  try {
+    const {id} = req.params;
+    const resp = await TipoAlerta.findOne({
+      where:{
+        id
+      }
+    });
+
+    if (!resp) {
+      return res.status(400).json({
+        ok:false,
+        msg:`El id: ${id} no esta registrado`
+      })
+    }
+    if (!resp.imagen) {
+      const pathImagen = path.join(
+        __dirname,
+        "../assets/",
+        'no-image.jpg'
+      );
+      return res.sendFile(pathImagen);
+    }
+    const pathImg = path.join(
+      __dirname,
+      "../uploads",
+      "tipoalerta",
+      resp.imagen
+    );
+    return res.sendFile(pathImg);
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`
+    });
+  }
+}
+
+const actualizarImagenAlerta = async (req = request, res = response)  => {
+  try {
+    const {id} = req.params;
+    const resp = await TipoAlerta.findOne({
+      where:{
+        id
+      }
+    });
+    if (!resp) {
+      return res.status(400).json({
+        ok:false,
+        msg:`El id: ${id} no esta registrado`
+      })
+    }
+    if (resp.imagen) {
+      const pathImagen = path.join(
+        __dirname,
+        "../uploads",
+        'tipoalerta',
+        resp.imagen
+      );
+      if (fs.existsSync(pathImagen)) {
+        fs.unlinkSync(pathImagen);
+      }
+    }
+    const file =req.files;
+    const nombre = await subirArchivo(file,['jpg','png','jpeg'],'tipoalerta');
+    const data ={
+      imagen:nombre
+    }
+    const image = await TipoAlerta.update(data,{
+      where:{
+        id
+      }
+    })
+    res.json({
+      ok:true,
+      msg:'Se actualizo la imagen con exito',
+      resp:image
+    })
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: `${error}`
+    });
+  }
+}
 
 const cargarArchivos = async (req = request, res = response) => {
   try {
@@ -119,8 +205,10 @@ const mostrarImagen = async (req, res) => {
 };
 
 module.exports = {
-  cargarArchivos,
+  mostrarImagenAlerta,
+  actualizarImagenAlerta
+  /* cargarArchivos,
   actualizarImagen,
   mostrarImagen,
-  actualizarImagenCloudinary,
+  actualizarImagenCloudinary, */
 };

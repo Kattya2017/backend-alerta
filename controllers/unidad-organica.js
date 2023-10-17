@@ -9,6 +9,7 @@ const getUnidadesOrganicas = async (req = request, res = response) => {
             where:{
                 estado,
             },
+            
             /* include:[{
                 model: Organo,
             }], */

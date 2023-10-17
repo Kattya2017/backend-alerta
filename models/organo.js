@@ -15,6 +15,9 @@ Organo.init({
     },
     id_sede:{
         type:DataTypes.INTEGER
+    },
+    anexo:{
+        type:DataTypes.STRING
     }
 },{
     sequelize,

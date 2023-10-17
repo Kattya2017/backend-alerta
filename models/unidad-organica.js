@@ -14,6 +14,9 @@ UnidadOrganica.init({
     },
     id_organo:{
         type:DataTypes.INTEGER
+    },
+    anexo:{
+        type:DataTypes.STRING
     }
 },{
     sequelize,
