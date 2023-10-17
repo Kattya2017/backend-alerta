@@ -30,6 +30,7 @@ class Server{
             tipoalerta: '/api/tipoalerta',
             unidadorganica: '/api/unidadorganica',
             usuario: '/api/usuario',
+            reporte: '/api/reporte'
         };
 
         //Connect to socket
@@ -101,7 +102,7 @@ class Server{
         this.app.use(this.paths.unidadorganica, require('../routes/unidad-organica'));
         this.app.use(this.paths.usuario, require('../routes/usuario'));
         this.app.use(this.paths.uploads, require('../routes/uploads'));
-        
+        this.app.use(this.paths.reporte, require('../routes/reportes'));
     }
     listen(){
         this.httpServer.listen(this.port, ()=>{

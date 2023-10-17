@@ -26,6 +26,9 @@ Administrado.init({
     },
     telefono:{
         type:DataTypes.CHAR
+    },
+    anexo:{
+        type:DataTypes.CHAR
     }
 },{
     sequelize,

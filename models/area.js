@@ -13,9 +13,6 @@ Area.init({
     },
     id_unidad_organica:{
         type:DataTypes.INTEGER
-    },
-    anexo:{
-        type:DataTypes.STRING
     }
 },{
     sequelize,
