@@ -8,6 +8,8 @@ const sequelize = require('../database/database');
 const { conectarCliente } = require('../sockets/usuario-socket');
 const { alertaSocket } = require('../sockets/alertas-socket');
 const { alertaDerivadaSocket } = require('../sockets/alerta-derivada-socket');
+const { informaticoDerivadaSocket } = require('../sockets/informatico-derivada-socket');
+const { RespuestaDerivadaSocket } = require('../sockets/respuesta-derivada-socket');
 class Server{
     static _intance=Server;
     io=socketIO.Server;
@@ -68,6 +70,8 @@ class Server{
             conectarCliente(cliente, this.io);
             alertaSocket(cliente,this.io);
             alertaDerivadaSocket(cliente,this.io);
+            informaticoDerivadaSocket(cliente,this.io);
+            RespuestaDerivadaSocket(cliente,this.io);
         });
     }
     middlewares(){
