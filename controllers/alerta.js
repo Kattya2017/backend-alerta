@@ -31,7 +31,7 @@ const getAlertas = async (req = request, res = response) => {
 };
 const getAlertasHoy = async (req = request, res = response) => {
   try {
-    const { fecha } = funDate();
+    const { fecha } = req.query;
     const resp = await Alerta.findAll({
       where: {
         fecha,
