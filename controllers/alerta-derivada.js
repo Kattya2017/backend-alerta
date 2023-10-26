@@ -2,7 +2,8 @@ const { request, response } = require("express");
 const AlertaDerivada = require("../models/alerta-derivada");
 const { Alerta, Usuario, Estado, TipoAlerta, Administrado } = require("../models");
 const { funDate } = require("../helpers");
-
+const FCM = require('fcm-node');
+require("dotenv").config();
 const getAlertaDerivadas = async (req = request, res = response) => {
   try {
     const resp = await AlertaDerivada.findAll({
@@ -154,7 +155,7 @@ const getAlertaDerivada = async (req = request, res = response) => {
   }
 };
 
-const postAlertaDerivada = async (req = request, res = response) => {
+const postAlertaDerivada = async (req = request, res = response,next) => {
   try {
     const { id_alerta, ...data } = req.body;
     const { fecha, hora } = funDate();
@@ -173,7 +174,21 @@ const postAlertaDerivada = async (req = request, res = response) => {
       }
     );
     const resp = await AlertaDerivada.create(data);
-
+    const fcm = new FCM(process.env.SERVER_KEY);
+    const message = {
+      to: '/topics/' + 'csjucalertainformatico',
+      notification: {
+        title: 'CSJUCINFORMATICO',
+        body: 'Tienes una nueva alerta derivada',
+      },
+    };
+    fcm.send(message, (err, response) => {
+      if (err) {
+        next(err);
+      } else {
+        console.log(response);
+      }
+    });
     res.json({
       ok: true,
       msg: "Se registro los datos con exito",

@@ -3,6 +3,8 @@ const Alerta = require("../models/alerta");
 const { Administrado, TipoAlerta } = require("../models");
 const { funDate } = require("../helpers");
 const { Op } = require("sequelize");
+const FCM = require('fcm-node');
+require("dotenv").config();
 
 const getAlertas = async (req = request, res = response) => {
   try {
@@ -113,7 +115,7 @@ const getAlerta = async (req = request, res = response) => {
   }
 };
 
-const postAlerta = async (req = request, res = response) => {
+const postAlerta = async (req = request, res = response, next) => {
   try {
     const administrado = req.administradoToken;
     const data = req.body;
@@ -122,7 +124,21 @@ const postAlerta = async (req = request, res = response) => {
     data.fecha = fecha;
     data.id_administrado = administrado.id;
     const resp = await Alerta.create(data);
-
+    const fcm = new FCM(process.env.SERVER_KEY);
+    const message = {
+      to: '/topics/' + 'csjucalerta',
+      notification: {
+        title: 'CSJUC',
+        body: 'Tienes una alerta nueva',
+      },
+    };
+    fcm.send(message, (err, response) => {
+      if (err) {
+        next(err);
+      } else {
+        console.log(response);
+      }
+    });
     res.json({
       ok: true,
       msg: "La alerta informatica ha sido enviado con exito, en breve atenderan su problema",
