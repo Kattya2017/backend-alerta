@@ -74,7 +74,7 @@ const postTipoAlerta = async (req = request, res = response) => {
     try {
         const {descripcion, imagen, ...data} = req.body;
         const files = req.files;
-        const archivosubido = await subirArchivo(files, ['png', 'jpg'], 'imagen')
+        const archivosubido = await subirArchivo(files, ['png', 'jpg'], 'tipoalerta')
 
         data.descripcion = descripcion.toUpperCase();
         data.imagen = archivosubido;
