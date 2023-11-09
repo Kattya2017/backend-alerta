@@ -28,27 +28,27 @@ const getAlertaDerivadas = async (req = request, res = response) => {
   }
 };
 
-const getAlertaDerivadaHoy=async (req = request, res = response)=>{
+const getAlertaDerivadaHoy = async (req = request, res = response) => {
   try {
-    const {fecha} = funDate();
+    const { fecha } = funDate();
     const resp = await AlertaDerivada.findAll({
-      where:{
-        fecha_inicio:fecha
+      where: {
+        fecha_inicio: fecha
       },
-      include:[
+      include: [
         {
-          model:Alerta,
-          include:[
+          model: Alerta,
+          include: [
             {
-              model:TipoAlerta
+              model: TipoAlerta
             },
             {
-              model:Administrado
+              model: Administrado
             }
           ]
         },
         {
-          model:Usuario
+          model: Usuario
         }
       ]
     });
@@ -65,27 +65,28 @@ const getAlertaDerivadaHoy=async (req = request, res = response)=>{
   }
 }
 
-const getAlertaInformatico=async (req = request, res = response)=>{
+const getAlertaInformatico = async (req = request, res = response) => {
   try {
     const usuarioToken = req.usuarioToken;
+    const {estado} = req.query;
     const resp = await AlertaDerivada.findAll({
-      where:{
-        id_usuario:usuarioToken.id,
-        id_estado:1
+      where: {
+        id_usuario: usuarioToken.id,
+        id_estado: estado
       },
-      include:[
+      include: [
         {
-          model:Alerta,
-          include:[
+          model: Alerta,
+          include: [
             {
-              model:TipoAlerta
+              model: TipoAlerta
             },
             {
-              model:Administrado
+              model: Administrado
             }
           ]
         },
-        
+
       ]
     });
     res.json({
@@ -100,26 +101,26 @@ const getAlertaInformatico=async (req = request, res = response)=>{
     });
   }
 }
-const getAlertaInformaticoId=async (req = request, res = response)=>{
+const getAlertaInformaticoId = async (req = request, res = response) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const resp = await AlertaDerivada.findAll({
-      where:{
-        id_usuario:id,
+      where: {
+        id_usuario: id,
       },
-      include:[
+      include: [
         {
-          model:Alerta,
-          include:[
+          model: Alerta,
+          include: [
             {
-              model:TipoAlerta
+              model: TipoAlerta
             },
             {
-              model:Administrado
+              model: Administrado
             }
           ]
         },
-        
+
       ]
     });
     res.json({
@@ -155,45 +156,48 @@ const getAlertaDerivada = async (req = request, res = response) => {
   }
 };
 
-const postAlertaDerivada = async (req = request, res = response,next) => {
+const postAlertaDerivada = async (req = request, res = response, next) => {
   try {
     const { id_alerta, ...data } = req.body;
     const { fecha, hora } = funDate();
-    data.id_estado = 1;
-    data.fecha_inicio = fecha;
-    data.hora_inicio = hora;
-    data.id_alerta = id_alerta;
-    const alerta = await Alerta.update(
-      {
-        estado: 1,
-      },
-      {
-        where: {
-          id: id_alerta,
+    
+      data.id_estado = 1;
+      data.fecha_inicio = fecha;
+      data.hora_inicio = hora;
+      data.id_alerta = id_alerta;
+      const alerta = await Alerta.update(
+        {
+          estado: 1,
         },
-      }
-    );
-    const resp = await AlertaDerivada.create(data);
-    const fcm = new FCM(process.env.SERVER_KEY);
-    const message = {
-      to: '/topics/' + 'csjucalertainformatico',
-      notification: {
-        title: 'CSJUCINFORMATICO',
-        body: 'Tienes una nueva alerta derivada',
-      },
-    };
-    fcm.send(message, (err, response) => {
-      if (err) {
-        next(err);
-      } else {
-        console.log(response);
-      }
-    });
-    res.json({
-      ok: true,
-      msg: "Se registro los datos con exito",
-      resp
-    });
+        {
+          where: {
+            id: id_alerta,
+          },
+        }
+      );
+      const resp = await AlertaDerivada.create(data);
+      const fcm = new FCM(process.env.SERVER_KEY);
+      const message = {
+        to: '/topics/' + 'csjucalertainformatico',
+        notification: {
+          title: 'CSJUCINFORMATICO',
+          body: 'Tienes una nueva alerta derivada',
+        },
+      };
+      fcm.send(message, (err, response) => {
+        if (err) {
+          next(err);
+        } else {
+          console.log(response);
+        }
+      });
+      res.json({
+        ok: true,
+        msg: "Se registro los datos con exito",
+        resp
+      });
+    
+    /*  */
   } catch (error) {
     res.status(400).json({
       ok: false,
@@ -206,10 +210,9 @@ const putAlertaDerivada = async (req = request, res = response) => {
   try {
     const { id } = req.params;
     const data = req.body;
-    const {fecha,hora} = funDate();
+    const { fecha, hora } = funDate();
     data.fecha_fin = fecha;
     data.hora_fin = hora;
-    data.id_estado = 2;
     const resp = await AlertaDerivada.update(data, {
       where: {
         id,
@@ -264,5 +267,5 @@ module.exports = {
   postAlertaDerivada,
   putAlertaDerivada,
   deleteAlertaDerivada,
-  
+
 };

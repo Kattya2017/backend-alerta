@@ -120,6 +120,8 @@ const postAlerta = async (req = request, res = response, next) => {
     const administrado = req.administradoToken;
     const data = req.body;
     const { fecha, hora } = funDate();
+    if (hora >= '07:45:00' && hora <= '16:45:00') {
+
     data.hora = hora;
     data.fecha = fecha;
     data.id_administrado = administrado.id;
@@ -144,6 +146,13 @@ const postAlerta = async (req = request, res = response, next) => {
       msg: "La alerta informatica ha sido enviado con exito, en breve atenderan su problema",
       resp,
     });
+  }
+  else {
+    res.json({
+      ok:false,
+      msg:'Las alertas solo se envia desde las 07:45am hasta las 04:45pm'
+    })
+  }
   } catch (error) {
     res.status(400).json({
       ok: false,

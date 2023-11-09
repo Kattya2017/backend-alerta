@@ -1,10 +1,18 @@
 const { request, response } = require("express");
 const { Estado } = require("../models");
+const { Op } = require("sequelize");
 
 
 const getEstados = async (req = request, res = response) => {
     try {
-        const resp = await Estado.findAll();
+        const resp = await Estado.findAll({
+            
+            where:{
+                id:{
+                    [Op.ne]:1
+                }
+            }
+        });
         
         res.json({
             ok:true,
